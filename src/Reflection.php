@@ -52,7 +52,7 @@ class Reflection
     {
         $reflectProperties = $this->getReflectionProperties();
         foreach ($reflectProperties as $name => $property) {
-            $from = $this->toSnakeName($name);
+            $from = $this->getSourceKeyName($name);
             $default = $property->isInitialized($this->entity)
                 ? $property->getValue($this->entity)
                 : null;
@@ -95,7 +95,7 @@ class Reflection
             if ($column instanceof Source && $column->to) {
                 $name = $column->to;
             } else {
-                $name = $this->toSnakeName($name);
+                $name = $this->getArrayKeyName($name);
             }
             $result[$name] = $value;
         }
@@ -145,6 +145,30 @@ class Reflection
         }
 
         return static::$reflectionProperties[$class] = $properties;
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    protected function getSourceKeyName(string $name): string
+    {
+        return match ($this->entity->getSourceKeyFormat()) {
+            'snake' => $this->toSnakeName($name),
+            default => $name
+        };
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    protected function getArrayKeyName(string $name): string
+    {
+        return match ($this->entity->getArrayKeyFormat()) {
+            'snake' => $this->toSnakeName($name),
+            default => $name
+        };
     }
 
     /**

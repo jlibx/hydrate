@@ -22,6 +22,20 @@ class Entity implements EntityInterface
     protected array $array = [];
 
     /**
+     * 支持类型【'default', 'snake'】
+     *
+     * @var string
+     */
+    protected string $sourceKeyFormat = 'default';
+
+    /**
+     * 支持类型【'default', 'snake'】
+     *
+     * @var string
+     */
+    protected string $arrayKeyFormat = 'snake';
+
+    /**
      * @param array $data
      * @return static
      */
@@ -85,4 +99,21 @@ class Entity implements EntityInterface
 
         return $array;
     }
+
+    /**
+     * @return string
+     */
+    public function getSourceKeyFormat(): string
+    {
+        return $this->sourceKeyFormat;
+    }
+
+    /**
+     * @return string
+     */
+    public function getArrayKeyFormat(): string
+    {
+        return $this->arrayKeyFormat;
+    }
+
 }
