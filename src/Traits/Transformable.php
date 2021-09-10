@@ -123,7 +123,7 @@ trait Transformable
      */
     protected function hasGetTransformer(string $key): bool
     {
-        return method_exists($this, $this->getSetTransformer($key));
+        return method_exists($this, $this->getGetTransformer($key));
     }
 
     /**
