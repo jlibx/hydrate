@@ -1,0 +1,28 @@
+{
+    "name": "kabunx/hydrate",
+    "description": "entity or xml hydrate",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "jonathan",
+            "email": "jianyang1209@outlook.com"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "ext-simplexml": "*",
+        "doctrine/annotations": "^1.13"
+    },
+    "require-dev": {},
+    "autoload": {
+        "psr-4": {
+            "Kabunx\\Hydrate\\": "src/"
+        }
+    },
+    "extra": {},
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
