@@ -23,7 +23,7 @@ class Hydrate
     public static function reallocate(EntityInterface $entity): void
     {
         $instance = new static();
-        $instance->entity = $entity;
+        $instance->setEntity($entity);
         $instance->assignPropertiesValue();
     }
 
@@ -51,7 +51,7 @@ class Hydrate
     public static function extract(EntityInterface $entity): array
     {
         $instance = new static();
-        $instance->entity = $entity;
+        $instance->setEntity($entity);
 
         return $instance->toArray();
     }

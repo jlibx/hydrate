@@ -8,7 +8,6 @@
 
 ```
 php: ^8.0
-doctrine/annotations: ^1.13
 ```
 
 ## 如何安装
@@ -28,6 +27,7 @@ namespace App\Entities;
 use Carbon\Carbon;
 use Kabunx\Hydrate\Annotations\Source;
 use Kabunx\Hydrate\Entity;
+use Kabunx\Hydrate\Source;
 
 /**
  * Class UserEntity
@@ -59,9 +59,9 @@ class UserEntity extends Entity
     public Carbon $createdAt = '';
 
     /**
-     * @Source(from="modifiedAt") 
      * @var string
      */
+     #[Source("modifiedAt")]
     public Carbon $updatedAt = '';
 
 
@@ -82,7 +82,7 @@ class UserEntity extends Entity
 <?php
 use App\Entities\UserEntity;
 
-$users = [[
+$users = [
     'id' => 1,
     'name' => 'test01',
     'email' => 'test01@sp.local',
@@ -90,15 +90,7 @@ $users = [[
     'birthday' => '2000-10-01',
     'createdAt' => '2021-07-23',
     'modifiedAt' => '2021-07-23 12:05:10'
-],[
-    'id' => 2,
-    'name' => 'test02',
-    'email' => 'test02@sp.local',
-    'gender' => 'f',
-    'birthday' => '2010-01-21',
-    'createdAt' => '2021-07-24 12:00:00',
-    'modifiedAt' => '2021-07-27 12:05:10'
-]];
+];
 
 UserEntity::instance($users);
 

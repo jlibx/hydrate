@@ -11,9 +11,8 @@
     "require": {
         "php": "^8.0",
         "ext-simplexml": "*",
-        "doctrine/annotations": "^1.13"
+        "nesbot/carbon": "^2.50"
     },
-    "require-dev": {},
     "autoload": {
         "psr-4": {
             "Kabunx\\Hydrate\\": "src/"
