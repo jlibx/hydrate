@@ -12,26 +12,22 @@ class Entity implements EntityInterface
     use Transformable;
 
     /**
-     * @var array
+     * 原始数据
      */
     protected array $original = [];
 
     /**
-     * @var array
+     * 已转化的数组
      */
     protected array $array = [];
 
     /**
      * 支持类型【'default', 'snake'】
-     *
-     * @var string
      */
-    protected string $sourceKeyFormat = 'default';
+    protected string $sourceKeyFormat = 'snake';
 
     /**
      * 支持类型【'default', 'snake'】
-     *
-     * @var string
      */
     protected string $arrayKeyFormat = 'snake';
 
@@ -55,27 +51,25 @@ class Entity implements EntityInterface
     {
         $this->original = $data;
         $this->array = [];
-        Reflection::hydrate($this);
+        Hydrate::reallocate($this);
 
         return $this;
     }
 
     /**
-     * @return array
+     * 转化为数组
      */
     public function toArray(): array
     {
         if (empty($this->array)) {
-            $this->array = Reflection::extract($this);
+            $this->array = Hydrate::extract($this);
         }
 
         return $this->array;
     }
 
     /**
-     * @param string $key
-     * @param mixed|null $default
-     * @return mixed
+     * 提取数据
      */
     public function getOriginal(string $key, mixed $default = null): mixed
     {
@@ -100,17 +94,11 @@ class Entity implements EntityInterface
         return $array;
     }
 
-    /**
-     * @return string
-     */
     public function getSourceKeyFormat(): string
     {
         return $this->sourceKeyFormat;
     }
 
-    /**
-     * @return string
-     */
     public function getArrayKeyFormat(): string
     {
         return $this->arrayKeyFormat;

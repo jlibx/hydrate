@@ -24,16 +24,18 @@ interface EntityInterface
      */
     public function toArray(): array;
 
-    public function transform2Entity(string $key, mixed $value, ReflectionType $type = null);
-
-    public function transform2Array(string $key, mixed $value): mixed;
-
     /**
      * @param string $key
      * @param mixed|null $default
      * @return mixed
      */
     public function getOriginal(string $key, mixed $default = null): mixed;
+
+
+    public function transform2Entity(string $key, mixed $value, ReflectionType $type = null);
+
+
+    public function transform2Array(string $key, mixed $value): mixed;
 
     public function getSourceKeyFormat(): string;
 
