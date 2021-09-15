@@ -10,6 +10,8 @@
     ],
     "require": {
         "php": "^8.0",
+        "ext-ctype": "*",
+        "ext-mbstring": "*",
         "ext-simplexml": "*",
         "nesbot/carbon": "^2.50"
     },
