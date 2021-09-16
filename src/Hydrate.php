@@ -15,6 +15,8 @@ class Hydrate
 
     protected static array $snakeNames = [];
 
+    protected static array $studlyNames = [];
+
     protected EntityInterface $entity;
 
     /**
@@ -131,6 +133,8 @@ class Hydrate
     {
         return match ($this->entity->getSourceKeyFormat()) {
             'snake' => $this->toSnakeName($name),
+            'camel' => lcfirst($this->toStudlyName($name)),
+            'studly' => $this->toStudlyName($name),
             default => $name
         };
     }
@@ -164,5 +168,16 @@ class Hydrate
         }
 
         return static::$snakeNames[$key][$delimiter] = $name;
+    }
+
+    protected function toStudlyName(string $name): string
+    {
+        $key = $name;
+        if (isset(static::$studlyNames[$key])) {
+            return static::$studlyNames[$key];
+        }
+        $name = ucwords(str_replace(['-', '_'], ' ', $name));
+
+        return static::$studlyNames[$key] = str_replace(' ', '', $name);
     }
 }
