@@ -22,7 +22,7 @@ class Entity implements EntityInterface
     protected array $array = [];
 
     /**
-     * 支持类型【'default', 'snake'】
+     * 支持类型【'default', 'snake', 'camel', 'studly'】
      */
     protected string $sourceKeyFormat = 'snake';
 

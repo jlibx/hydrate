@@ -6,7 +6,7 @@ namespace Kabunx\Hydrate;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
-class Source
+class Column
 {
     public ?string $from;
 

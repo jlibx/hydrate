@@ -42,27 +42,27 @@ class AttributeReader
         return null;
     }
 
-    public function getSourceFrom(ReflectionProperty $property): ?string
+    public function getColumnFrom(ReflectionProperty $property): ?string
     {
-        $source = $this->getSourceAttribute($property);
+        $source = $this->getColumnAttribute($property);
 
         return $source?->from;
     }
 
-    public function getSourceTo(ReflectionProperty $property): ?string
+    public function getColumnTo(ReflectionProperty $property): ?string
     {
-        $source = $this->getSourceAttribute($property);
+        $source = $this->getColumnAttribute($property);
 
         return $source?->to;
     }
 
-    public function getSourceAttribute(ReflectionProperty $property): ?Source
+    public function getColumnAttribute(ReflectionProperty $property): ?Column
     {
-        $attrs = $property->getAttributes(Source::class);
+        $attrs = $property->getAttributes(Column::class);
         if (count($attrs) > 0) {
             foreach ($attrs as $attr) {
                 $source = $attr->newInstance();
-                if ($source instanceof Source) {
+                if ($source instanceof Column) {
                     return $source;
                 }
             }

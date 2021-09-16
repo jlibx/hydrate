@@ -27,7 +27,7 @@ namespace App\Entities;
 use Carbon\Carbon;
 use Kabunx\Hydrate\Annotations\Source;
 use Kabunx\Hydrate\Entity;
-use Kabunx\Hydrate\Source;
+use Kabunx\Hydrate\Column;
 
 /**
  * Class UserEntity
@@ -61,7 +61,7 @@ class UserEntity extends Entity
     /**
      * @var string
      */
-     #[Source("modifiedAt")]
+     #[Column(from: "modifiedAt")]
     public Carbon $updatedAt = '';
 
 

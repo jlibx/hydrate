@@ -36,7 +36,7 @@ class Hydrate
             $default = $property->isInitialized($this->entity)
                 ? $property->getValue($this->entity)
                 : null;
-            $from = $this->getAttributeReader()->getSourceFrom($property);
+            $from = $this->getAttributeReader()->getColumnFrom($property);
             if (! $from) {
                 $from = $this->getSourceKeyName($name);
             }
@@ -72,7 +72,7 @@ class Hydrate
         $result = [];
         $reflectProperties = $this->getReflectionProperties();
         foreach ($reflectProperties as $name => $property) {
-            $to = $this->getAttributeReader()->getSourceTo($property);
+            $to = $this->getAttributeReader()->getColumnTo($property);
             if (! $to) {
                 $to = $this->getArrayKeyName($name);
             }
