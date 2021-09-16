@@ -15,6 +15,12 @@ interface EntityInterface
 
     /**
      * @param array $data
+     * @return static
+     */
+    public function newInstance(array $data): static;
+
+    /**
+     * @param array $data
      * @return $this
      */
     public function fill(array $data): static;

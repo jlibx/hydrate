@@ -9,7 +9,7 @@ use ReflectionProperty;
 
 class Hydrate
 {
-    protected static SourceReader $sourceReader;
+    protected static AttributeReader $attributeReader;
 
     protected static array $reflectionProperties = [];
 
@@ -34,13 +34,22 @@ class Hydrate
             $default = $property->isInitialized($this->entity)
                 ? $property->getValue($this->entity)
                 : null;
-            $from = $this->getSourceReader()->getSourceFrom($property);
+            $from = $this->getAttributeReader()->getSourceFrom($property);
             if (! $from) {
                 $from = $this->getSourceKeyName($name);
             }
             $value = $this->entity->getOriginal($from, $default);
             // 被定义的数据转化
-            $value = $this->entity->transform2Entity($name, $value, $property->getType());
+            if ($entity = $this->getAttributeReader()->getArrayEntityClass($property)) {
+                $entities = [];
+                foreach ((array)$value as $item) {
+                    $entities[] = $entity->newInstance($item);
+                }
+                $value = $entities;
+            } else {
+                $value = $this->entity->transform2Entity($name, $value, $property->getType());
+            }
+
             $property->setValue($this->entity, $value);
         }
     }
@@ -61,7 +70,7 @@ class Hydrate
         $result = [];
         $reflectProperties = $this->getReflectionProperties();
         foreach ($reflectProperties as $name => $property) {
-            $to = $this->getSourceReader()->getSourceTo($property);
+            $to = $this->getAttributeReader()->getSourceTo($property);
             if (! $to) {
                 $to = $this->getArrayKeyName($name);
             }
@@ -84,13 +93,13 @@ class Hydrate
         return $this;
     }
 
-    public function getSourceReader(): SourceReader
+    public function getAttributeReader(): AttributeReader
     {
-        if (! isset(static::$sourceReader)) {
-            static::$sourceReader = new SourceReader();
+        if (! isset(static::$attributeReader)) {
+            static::$attributeReader = new AttributeReader();
         }
 
-        return static::$sourceReader;
+        return static::$attributeReader;
     }
 
     /**

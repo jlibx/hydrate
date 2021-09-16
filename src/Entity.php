@@ -41,6 +41,15 @@ class Entity implements EntityInterface
     }
 
     /**
+     * @param array $data
+     * @return $this
+     */
+    public function newInstance(array $data): static
+    {
+        return static::instance($data);
+    }
+
+    /**
      * array to this object
      * 通过映射关系补充当前对象数据
      *
