@@ -38,7 +38,7 @@ class Hydrate
                 : null;
             $from = $this->getAttributeReader()->getColumnFrom($property);
             if (! $from) {
-                $from = $this->getSourceKeyName($name);
+                $from = $this->getFromKeyName($name);
             }
             $value = $this->entity->getOriginal($from, $default);
             // 被定义的数据转化
@@ -74,7 +74,7 @@ class Hydrate
         foreach ($reflectProperties as $name => $property) {
             $to = $this->getAttributeReader()->getColumnTo($property);
             if (! $to) {
-                $to = $this->getArrayKeyName($name);
+                $to = $this->getToKeyName($name);
             }
             $value = $property->getValue($this->entity);
             $value = $this->entity->transform2Array($name, $value);
@@ -129,9 +129,9 @@ class Hydrate
      * @param string $name
      * @return string
      */
-    protected function getSourceKeyName(string $name): string
+    protected function getFromKeyName(string $name): string
     {
-        return match ($this->entity->getSourceKeyFormat()) {
+        return match ($this->entity->getFromKeyFormat()) {
             'snake' => $this->toSnakeName($name),
             'camel' => lcfirst($this->toStudlyName($name)),
             'studly' => $this->toStudlyName($name),
@@ -143,9 +143,9 @@ class Hydrate
      * @param string $name
      * @return string
      */
-    protected function getArrayKeyName(string $name): string
+    protected function getToKeyName(string $name): string
     {
-        return match ($this->entity->getArrayKeyFormat()) {
+        return match ($this->entity->getToKeyFormat()) {
             'snake' => $this->toSnakeName($name),
             default => $name
         };

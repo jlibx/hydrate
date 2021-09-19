@@ -24,12 +24,12 @@ class Entity implements EntityInterface
     /**
      * 支持类型【'default', 'snake', 'camel', 'studly'】
      */
-    protected string $sourceKeyFormat = 'snake';
+    protected string $fromKeyFormat = 'snake';
 
     /**
      * 支持类型【'default', 'snake'】
      */
-    protected string $arrayKeyFormat = 'snake';
+    protected string $toKeyFormat = 'snake';
 
     /**
      * @param array $data
@@ -83,34 +83,34 @@ class Entity implements EntityInterface
     public function getOriginal(string $key, mixed $default = null): mixed
     {
         if (empty($this->original)) {
-            return value($default);
+            return $default;
         }
         if (array_key_exists($key, $this->original)) {
             return $this->original[$key];
         }
         if (! str_contains($key, '.')) {
-            return $this->original[$key] ?? value($default);
+            return $this->original[$key] ?? $default;
         }
         $array = $this->original;
         foreach (explode('.', $key) as $segment) {
             if (is_array($array) && array_key_exists($segment, $array)) {
                 $array = $array[$segment];
             } else {
-                return value($default);
+                return $default;
             }
         }
 
         return $array;
     }
 
-    public function getSourceKeyFormat(): string
+    public function getFromKeyFormat(): string
     {
-        return $this->sourceKeyFormat;
+        return $this->fromKeyFormat;
     }
 
-    public function getArrayKeyFormat(): string
+    public function getToKeyFormat(): string
     {
-        return $this->arrayKeyFormat;
+        return $this->toKeyFormat;
     }
 
 }
