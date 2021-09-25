@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Kabunx\Hydrate\Test;
 
 use Carbon\Carbon;
-use Kabunx\Hydrate\Entity;
 use PHPUnit\Framework\TestCase;
 
 /**
