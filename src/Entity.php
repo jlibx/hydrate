@@ -24,12 +24,12 @@ class Entity implements EntityInterface
     /**
      * 支持类型【'default', 'snake', 'camel', 'studly'】
      */
-    protected string $fromKeyFormat = 'snake';
+    protected string $sourceKeyFormat = 'snake';
 
     /**
      * 支持类型【'default', 'snake'】
      */
-    protected string $toKeyFormat = 'snake';
+    protected string $targetKeyFormat = 'snake';
 
     /**
      * @param array $data
@@ -60,7 +60,7 @@ class Entity implements EntityInterface
     {
         $this->original = $data;
         $this->array = [];
-        Hydrate::reallocate($this);
+        Hydrate::reassign($this);
 
         return $this;
     }
@@ -103,14 +103,14 @@ class Entity implements EntityInterface
         return $array;
     }
 
-    public function getFromKeyFormat(): string
+    public function getSourceKeyFormat(): string
     {
-        return $this->fromKeyFormat;
+        return $this->sourceKeyFormat;
     }
 
-    public function getToKeyFormat(): string
+    public function getTargetKeyFormat(): string
     {
-        return $this->toKeyFormat;
+        return $this->targetKeyFormat;
     }
 
 }

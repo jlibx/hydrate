@@ -42,14 +42,14 @@ class AttributeReader
         return null;
     }
 
-    public function getColumnSource(ReflectionProperty $property): ?string
+    public function getColumnSourceName(ReflectionProperty $property): ?string
     {
         $columnAttribute = $this->getColumnAttribute($property);
 
         return $columnAttribute?->source;
     }
 
-    public function getColumnTarget(ReflectionProperty $property): ?string
+    public function getColumnTargetName(ReflectionProperty $property): ?string
     {
         $columnAttribute = $this->getColumnAttribute($property);
 

@@ -41,8 +41,8 @@ interface EntityInterface
 
     public function transform2Array(string $key, mixed $value): mixed;
 
-    public function getFromKeyFormat(): string;
+    public function getSourceKeyFormat(): string;
 
-    public function getToKeyFormat(): string;
+    public function getTargetKeyFormat(): string;
 
 }

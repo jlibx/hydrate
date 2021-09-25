@@ -22,23 +22,23 @@ class Hydrate
     /**
      * 将数据配分到属性上
      */
-    public static function reallocate(EntityInterface $entity): void
+    public static function reassign(EntityInterface $entity): void
     {
         $instance = new static();
         $instance->setEntity($entity);
-        $instance->assignPropertiesValue();
+        $instance->assignEntity();
     }
 
-    public function assignPropertiesValue(): void
+    public function assignEntity(): void
     {
         $reflectProperties = $this->getReflectionProperties();
         foreach ($reflectProperties as $name => $property) {
             $default = $property->isInitialized($this->entity)
                 ? $property->getValue($this->entity)
                 : null;
-            $source = $this->getAttributeReader()->getColumnSource($property);
+            $source = $this->getAttributeReader()->getColumnSourceName($property);
             if (! $source) {
-                $source = $this->getFromKeyName($name);
+                $source = $this->getEntitySourceKeyName($name);
             }
             $value = $this->entity->getOriginal($source, $default);
             // 被定义的数据转化
@@ -72,9 +72,9 @@ class Hydrate
         $result = [];
         $reflectProperties = $this->getReflectionProperties();
         foreach ($reflectProperties as $name => $property) {
-            $target = $this->getAttributeReader()->getColumnTarget($property);
+            $target = $this->getAttributeReader()->getColumnTargetName($property);
             if (! $target) {
-                $target = $this->getToKeyName($name);
+                $target = $this->getEntityTargetKeyName($name);
             }
             $value = $property->getValue($this->entity);
             $value = $this->entity->transform2Array($name, $value);
@@ -129,9 +129,9 @@ class Hydrate
      * @param string $name
      * @return string
      */
-    protected function getFromKeyName(string $name): string
+    protected function getEntitySourceKeyName(string $name): string
     {
-        return match ($this->entity->getFromKeyFormat()) {
+        return match ($this->entity->getSourceKeyFormat()) {
             'snake' => $this->toSnakeName($name),
             'camel' => lcfirst($this->toStudlyName($name)),
             'studly' => $this->toStudlyName($name),
@@ -143,9 +143,9 @@ class Hydrate
      * @param string $name
      * @return string
      */
-    protected function getToKeyName(string $name): string
+    protected function getEntityTargetKeyName(string $name): string
     {
-        return match ($this->entity->getToKeyFormat()) {
+        return match ($this->entity->getTargetKeyFormat()) {
             'snake' => $this->toSnakeName($name),
             default => $name
         };
