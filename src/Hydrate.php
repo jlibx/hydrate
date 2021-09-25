@@ -40,7 +40,7 @@ class Hydrate
             if (! $source) {
                 $source = $this->getEntitySourceKeyName($name);
             }
-            $value = $this->entity->getOriginal($source, $default);
+            $value = $this->entity->getValueFromOriginal($source, $default);
             // 被定义的数据转化
             if ($entity = $this->getAttributeReader()->getArrayEntityClass($property)) {
                 $entities = [];
@@ -59,15 +59,14 @@ class Hydrate
     /**
      * 对象转为数组
      */
-    public static function extract(EntityInterface $entity): array
+    public static function extract(EntityInterface $entity): void
     {
         $instance = new static();
         $instance->setEntity($entity);
-
-        return $instance->toArray();
+        $instance->toArray();
     }
 
-    public function toArray(): array
+    public function toArray(): void
     {
         $result = [];
         $reflectProperties = $this->getReflectionProperties();
@@ -80,8 +79,7 @@ class Hydrate
             $value = $this->entity->transform2Array($name, $value);
             $result[$target] = $value;
         }
-
-        return $result;
+        $this->entity->setArray($result);
     }
 
     /**

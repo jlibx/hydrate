@@ -71,7 +71,7 @@ class Entity implements EntityInterface
     public function toArray(): array
     {
         if (empty($this->array)) {
-            $this->array = Hydrate::extract($this);
+            Hydrate::extract($this);
         }
 
         return $this->array;
@@ -80,7 +80,7 @@ class Entity implements EntityInterface
     /**
      * 提取数据
      */
-    public function getOriginal(string $key, mixed $default = null): mixed
+    public function getValueFromOriginal(string $key, mixed $default = null): mixed
     {
         if (empty($this->original)) {
             return $default;
@@ -113,4 +113,13 @@ class Entity implements EntityInterface
         return $this->targetKeyFormat;
     }
 
+    public function getArray(): array
+    {
+        return $this->array;
+    }
+
+    public function setArray(array $array): void
+    {
+        $this->array = $array;
+    }
 }

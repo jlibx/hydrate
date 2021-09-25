@@ -35,7 +35,7 @@ interface EntityInterface
      * @param mixed|null $default
      * @return mixed
      */
-    public function getOriginal(string $key, mixed $default = null): mixed;
+    public function getValueFromOriginal(string $key, mixed $default = null): mixed;
 
     public function transform2Entity(string $key, mixed $value, ReflectionType $type = null);
 
@@ -45,4 +45,7 @@ interface EntityInterface
 
     public function getTargetKeyFormat(): string;
 
+    public function getArray(): array;
+
+    public function setArray(array $array): void;
 }
