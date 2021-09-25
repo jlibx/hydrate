@@ -31,7 +31,11 @@ class User extends Entity
      */
     public function setGender(string $value): int
     {
-        return $value == 'm' ? 0 : 1;
+        return match ($value) {
+            'f', 'female' => 2,
+            'm', 'male', => 1,
+            default => 0
+        };
     }
 
     public function getBirthday(?Carbon $birthday): ?string
