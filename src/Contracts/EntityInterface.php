@@ -30,6 +30,10 @@ interface EntityInterface
      */
     public function toArray(): array;
 
+    public function getArray(): array;
+
+    public function setArray(array $array): void;
+
     /**
      * @param string $key
      * @param mixed|null $default
@@ -48,8 +52,4 @@ interface EntityInterface
     public function getTargetKeyFormat(): string;
 
     public function setTargetKeyFormat(string $targetKeyFormat): void;
-
-    public function getArray(): array;
-
-    public function setArray(array $array): void;
 }

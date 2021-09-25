@@ -77,6 +77,16 @@ class Entity implements EntityInterface
         return $this->array;
     }
 
+    public function getArray(): array
+    {
+        return $this->array;
+    }
+
+    public function setArray(array $array): void
+    {
+        $this->array = $array;
+    }
+
     /**
      * 提取数据
      */
@@ -101,16 +111,6 @@ class Entity implements EntityInterface
         }
 
         return $array;
-    }
-
-    public function getArray(): array
-    {
-        return $this->array;
-    }
-
-    public function setArray(array $array): void
-    {
-        $this->array = $array;
     }
 
     public function getSourceKeyFormat(): string
