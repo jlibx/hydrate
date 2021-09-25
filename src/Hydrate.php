@@ -36,11 +36,11 @@ class Hydrate
             $default = $property->isInitialized($this->entity)
                 ? $property->getValue($this->entity)
                 : null;
-            $from = $this->getAttributeReader()->getColumnFrom($property);
-            if (! $from) {
-                $from = $this->getFromKeyName($name);
+            $source = $this->getAttributeReader()->getColumnSource($property);
+            if (! $source) {
+                $source = $this->getFromKeyName($name);
             }
-            $value = $this->entity->getOriginal($from, $default);
+            $value = $this->entity->getOriginal($source, $default);
             // 被定义的数据转化
             if ($entity = $this->getAttributeReader()->getArrayEntityClass($property)) {
                 $entities = [];
@@ -72,13 +72,13 @@ class Hydrate
         $result = [];
         $reflectProperties = $this->getReflectionProperties();
         foreach ($reflectProperties as $name => $property) {
-            $to = $this->getAttributeReader()->getColumnTo($property);
-            if (! $to) {
-                $to = $this->getToKeyName($name);
+            $target = $this->getAttributeReader()->getColumnTarget($property);
+            if (! $target) {
+                $target = $this->getToKeyName($name);
             }
             $value = $property->getValue($this->entity);
             $value = $this->entity->transform2Array($name, $value);
-            $result[$to] = $value;
+            $result[$target] = $value;
         }
 
         return $result;

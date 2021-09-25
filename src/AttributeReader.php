@@ -42,18 +42,18 @@ class AttributeReader
         return null;
     }
 
-    public function getColumnFrom(ReflectionProperty $property): ?string
+    public function getColumnSource(ReflectionProperty $property): ?string
     {
-        $source = $this->getColumnAttribute($property);
+        $columnAttribute = $this->getColumnAttribute($property);
 
-        return $source?->from;
+        return $columnAttribute?->source;
     }
 
-    public function getColumnTo(ReflectionProperty $property): ?string
+    public function getColumnTarget(ReflectionProperty $property): ?string
     {
-        $source = $this->getColumnAttribute($property);
+        $columnAttribute = $this->getColumnAttribute($property);
 
-        return $source?->to;
+        return $columnAttribute?->target;
     }
 
     public function getColumnAttribute(ReflectionProperty $property): ?Column
@@ -61,9 +61,9 @@ class AttributeReader
         $attrs = $property->getAttributes(Column::class);
         if (count($attrs) > 0) {
             foreach ($attrs as $attr) {
-                $source = $attr->newInstance();
-                if ($source instanceof Column) {
-                    return $source;
+                $columnAttribute = $attr->newInstance();
+                if ($columnAttribute instanceof Column) {
+                    return $columnAttribute;
                 }
             }
         }

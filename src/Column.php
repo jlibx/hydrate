@@ -8,13 +8,13 @@ use Attribute;
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class Column
 {
-    public ?string $from;
+    public ?string $source;
 
-    public ?string $to;
+    public ?string $target;
 
-    public function __construct(?string $from = null, ?string $to = null)
+    public function __construct(?string $source = null, ?string $target = null)
     {
-        $this->from = $from;
-        $this->to = $to;
+        $this->source = $source;
+        $this->target = $target;
     }
 }
