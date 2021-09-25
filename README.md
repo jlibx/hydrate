@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace App\Entities;
 
 use Carbon\Carbon;
-use Kabunx\Hydrate\Annotations\Source;
 use Kabunx\Hydrate\Entity;
 use Kabunx\Hydrate\Column;
 
@@ -35,34 +34,18 @@ use Kabunx\Hydrate\Column;
  */
 class UserEntity extends Entity
 {
-
-    /**
-     * @var string
-     */
     public string $name = '';
 
     public string $email = '';
 
-    /**
-     * @var int
-     */
     public int $gender = 0;
 
-    /**
-     * @var string
-     */
     public string $birthday = '';
 
-    /**
-     * @var string
-     */
-    public Carbon $createdAt = '';
+    public ?Carbon $createdAt;
 
-    /**
-     * @var string
-     */
-     #[Column(from: "modifiedAt")]
-    public Carbon $updatedAt = '';
+     #[Column(source: "modifiedAt")]
+    public ?Carbon $updatedAt;
 
 
     /**

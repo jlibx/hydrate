@@ -43,7 +43,11 @@ interface EntityInterface
 
     public function getSourceKeyFormat(): string;
 
+    public function setSourceKeyFormat(string $sourceKeyFormat): void;
+
     public function getTargetKeyFormat(): string;
+
+    public function setTargetKeyFormat(string $targetKeyFormat): void;
 
     public function getArray(): array;
 

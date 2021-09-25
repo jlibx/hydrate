@@ -103,16 +103,6 @@ class Entity implements EntityInterface
         return $array;
     }
 
-    public function getSourceKeyFormat(): string
-    {
-        return $this->sourceKeyFormat;
-    }
-
-    public function getTargetKeyFormat(): string
-    {
-        return $this->targetKeyFormat;
-    }
-
     public function getArray(): array
     {
         return $this->array;
@@ -121,5 +111,27 @@ class Entity implements EntityInterface
     public function setArray(array $array): void
     {
         $this->array = $array;
+    }
+
+    public function getSourceKeyFormat(): string
+    {
+        return $this->sourceKeyFormat;
+    }
+
+    public function setSourceKeyFormat(string $sourceKeyFormat): void
+    {
+        $this->sourceKeyFormat = $sourceKeyFormat;
+    }
+
+
+    public function getTargetKeyFormat(): string
+    {
+        return $this->targetKeyFormat;
+    }
+
+
+    public function setTargetKeyFormat(string $targetKeyFormat): void
+    {
+        $this->targetKeyFormat = $targetKeyFormat;
     }
 }
