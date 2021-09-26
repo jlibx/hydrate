@@ -25,8 +25,11 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Kabunx\\Hydrate\\Test\\": "tests"
+            "Kabunx\\Hydrate\\Test\\": "tests/"
         }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
     },
     "extra": {},
     "config": {

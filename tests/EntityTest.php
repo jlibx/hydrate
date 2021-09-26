@@ -8,6 +8,10 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Kabunx\Hydrate\Entity
+ * @covers \Kabunx\Hydrate\Hydrate
+ * @covers \Kabunx\Hydrate\AttributeReader
+ * @covers \Kabunx\Hydrate\Column
+ * @covers \Kabunx\Hydrate\ArrayEntity
  */
 final class EntityTest extends TestCase
 {
@@ -24,7 +28,16 @@ final class EntityTest extends TestCase
             'gender' => 'female',
             'birthday' => '2000-10-01',
             'createdAt' => '2021-07-23',
-            'modifiedAt' => '2021-07-23 12:05:10'
+            'modifiedAt' => '2021-07-23 12:05:10',
+            'profile' => [
+                'name' => '详情',
+                'age' => 10,
+                'is_validated' => true
+            ],
+            'addresses' => [
+                ['name' => '默认地址', 'cityName' => '苏州'],
+                ['name' => '地址', 'cityName' => '上海']
+            ]
         ];
         $this->assertNotEmpty($source);
 
@@ -42,6 +55,7 @@ final class EntityTest extends TestCase
         $this->assertSame('test@sp.local', $user->email);
         $this->assertSame(2, $user->gender);
         $this->assertInstanceOf(Carbon::class, $user->birthday);
+        $this->assertIsArray($user->addresses);
 
         return $user;
     }
@@ -58,7 +72,17 @@ final class EntityTest extends TestCase
             'gender' => 2,
             'birthday' => '2000-10-01',
             'created_at' => '2021-07-23 00:00:00',
-            'updated_at' => '2021-07-23 12:05:10'
+            'updated_at' => '2021-07-23 12:05:10',
+            'profile_name' => '详情',
+            'profile' => [
+                'name' => '详情',
+                'age' => 10,
+                'is_validated' => true
+            ],
+            'addresses' => [
+                ['name' => '默认地址', 'city_name' => '苏州'],
+                ['name' => '地址', 'city_name' => '上海']
+            ]
         ], $target);
     }
 }

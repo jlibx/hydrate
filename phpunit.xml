@@ -11,14 +11,18 @@
          processIsolation="false"
          stopOnFailure="false"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
-    <coverage>
+    <coverage processUncoveredFiles="true">
         <include>
-            <directory suffix=".php">src/</directory>
+            <directory suffix=".php">./src</directory>
         </include>
+        <report>
+            <clover outputFile="phpunit/clover.xml"/>
+            <html outputDirectory="phpunit/html" lowUpperBound="35" highLowerBound="70"/>
+        </report>
     </coverage>
     <testsuites>
         <testsuite name="Hydrate Test Suite">
-            <directory>tests</directory>
+            <directory>./tests</directory>
         </testsuite>
     </testsuites>
     <php>
