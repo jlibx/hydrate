@@ -33,13 +33,10 @@ class Hydrate
     {
         $reflectProperties = $this->getReflectionProperties();
         foreach ($reflectProperties as $name => $property) {
+            $source = $this->getSourceName($property);
             $default = $property->isInitialized($this->entity)
                 ? $property->getValue($this->entity)
                 : null;
-            $source = $this->getAttributeReader()->getColumnSourceName($property);
-            if (! $source) {
-                $source = $this->getEntitySourceKeyName($name);
-            }
             $value = $this->entity->getValueFromOriginal($source, $default);
             // 被定义的数据转化
             if ($entity = $this->getAttributeReader()->getArrayEntityClass($property)) {
@@ -71,10 +68,7 @@ class Hydrate
         $result = [];
         $reflectProperties = $this->getReflectionProperties();
         foreach ($reflectProperties as $name => $property) {
-            $target = $this->getAttributeReader()->getColumnTargetName($property);
-            if (! $target) {
-                $target = $this->getEntityTargetKeyName($name);
-            }
+            $target = $this->getTargetName($property);
             $value = $property->getValue($this->entity);
             $value = $this->entity->transform2Array($name, $value);
             $result[$target] = $value;
@@ -95,11 +89,29 @@ class Hydrate
 
     public function getAttributeReader(): AttributeReader
     {
-        if (! isset(static::$attributeReader)) {
+        if (!isset(static::$attributeReader)) {
             static::$attributeReader = new AttributeReader();
         }
 
         return static::$attributeReader;
+    }
+
+    public function getSourceName(ReflectionProperty $property): string
+    {
+        $source = $this->getAttributeReader()->getColumnSourceName($property);
+        if (!$source) {
+            $source = $this->getEntitySourceKeyName($property->getName());
+        }
+        return $source;
+    }
+
+    public function getTargetName(ReflectionProperty $property): string
+    {
+        $source = $this->getAttributeReader()->getColumnTargetName($property);
+        if (!$source) {
+            $source = $this->getEntityTargetKeyName($property->getName());
+        }
+        return $source;
     }
 
     /**
@@ -160,7 +172,7 @@ class Hydrate
         if (isset(static::$snakeNames[$key][$delimiter])) {
             return static::$snakeNames[$key][$delimiter];
         }
-        if (! ctype_lower($name)) {
+        if (!ctype_lower($name)) {
             $name = preg_replace('/\s+/u', '', ucwords($name));
             $name = mb_strtolower(preg_replace('/(.)(?=[A-Z])/u', '$1' . $delimiter, $name), 'UTF-8');
         }
