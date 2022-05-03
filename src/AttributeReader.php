@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Kabunx\Hydrate;
 
+use Kabunx\Hydrate\Attributes\ArrayEntity;
+use Kabunx\Hydrate\Attributes\Column;
 use Kabunx\Hydrate\Contracts\EntityInterface;
 use ReflectionProperty;
 

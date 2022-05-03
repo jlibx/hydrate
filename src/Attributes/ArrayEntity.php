@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Kabunx\Hydrate;
+namespace Kabunx\Hydrate\Attributes;
 
 use Attribute;
 

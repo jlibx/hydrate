@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Kabunx\Hydrate\Test;
 
 use Carbon\Carbon;
-use Kabunx\Hydrate\ArrayEntity;
-use Kabunx\Hydrate\Column;
+use Kabunx\Hydrate\Attributes\ArrayEntity;
+use Kabunx\Hydrate\Attributes\Column;
 use Kabunx\Hydrate\Entity;
 
 class User extends Entity
@@ -22,7 +22,7 @@ class User extends Entity
 
     public ?Carbon $createdAt;
 
-    #[Column(source: "modifiedAt")]
+    #[Column("modifiedAt")]
     public ?Carbon $updatedAt;
 
     #[Column("profile.name")]
