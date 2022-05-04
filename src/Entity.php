@@ -5,7 +5,7 @@ namespace Kabunx\Hydrate;
 
 use Kabunx\Hydrate\Contracts\EntityInterface;
 use Kabunx\Hydrate\Traits\Transformable;
-
+use ReflectionClass;
 
 class Entity implements EntityInterface
 {
@@ -20,16 +20,6 @@ class Entity implements EntityInterface
      * 已转化的数组
      */
     protected array $array = [];
-
-    /**
-     * 支持类型【'default', 'snake', 'camel', 'studly'】
-     */
-    protected string $sourceKeyFormat = 'snake';
-
-    /**
-     * 支持类型【'default', 'snake'】
-     */
-    protected string $targetKeyFormat = 'snake';
 
     /**
      * @param array $data
@@ -90,7 +80,7 @@ class Entity implements EntityInterface
     /**
      * 提取数据
      */
-    public function getValueFromOriginal(string $key, mixed $default = null): mixed
+    public function getOriginalValue(string $key, mixed $default = null): mixed
     {
         if (empty($this->original)) {
             return $default;
@@ -98,7 +88,7 @@ class Entity implements EntityInterface
         if (array_key_exists($key, $this->original)) {
             return $this->original[$key];
         }
-        if (! str_contains($key, '.')) {
+        if (!str_contains($key, '.')) {
             return $this->original[$key] ?? $default;
         }
         $array = $this->original;
@@ -113,25 +103,8 @@ class Entity implements EntityInterface
         return $array;
     }
 
-    public function getSourceKeyFormat(): string
+    public static function getReflectionClass(): ReflectionClass
     {
-        return $this->sourceKeyFormat;
-    }
-
-    public function setSourceKeyFormat(string $sourceKeyFormat): void
-    {
-        $this->sourceKeyFormat = $sourceKeyFormat;
-    }
-
-
-    public function getTargetKeyFormat(): string
-    {
-        return $this->targetKeyFormat;
-    }
-
-
-    public function setTargetKeyFormat(string $targetKeyFormat): void
-    {
-        $this->targetKeyFormat = $targetKeyFormat;
+        return new ReflectionClass(static::class);
     }
 }

@@ -39,17 +39,10 @@ interface EntityInterface
      * @param mixed|null $default
      * @return mixed
      */
-    public function getValueFromOriginal(string $key, mixed $default = null): mixed;
+    public function getOriginalValue(string $key, mixed $default = null): mixed;
 
     public function transform2Entity(string $key, mixed $value, ReflectionType $type = null);
 
     public function transform2Array(string $key, mixed $value): mixed;
 
-    public function getSourceKeyFormat(): string;
-
-    public function setSourceKeyFormat(string $sourceKeyFormat): void;
-
-    public function getTargetKeyFormat(): string;
-
-    public function setTargetKeyFormat(string $targetKeyFormat): void;
 }

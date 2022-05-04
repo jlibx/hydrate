@@ -6,12 +6,12 @@ namespace Kabunx\Hydrate\Test;
 use Carbon\Carbon;
 use Kabunx\Hydrate\Attributes\ArrayEntity;
 use Kabunx\Hydrate\Attributes\Column;
+use Kabunx\Hydrate\Attributes\Naming;
 use Kabunx\Hydrate\Entity;
 
+#[Naming(Naming::DEFAULT_SNAKE)]
 class User extends Entity
 {
-    protected string $sourceKeyFormat = 'camel';
-
     public string $name = '';
 
     public string $email = '';

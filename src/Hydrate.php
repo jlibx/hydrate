@@ -11,13 +11,13 @@ class Hydrate
 {
     protected static AttributeReader $attributeReader;
 
+    protected static array $reflectionClasses = [];
+
     protected static array $reflectionProperties = [];
 
     protected static array $snakeNames = [];
 
     protected static array $studlyNames = [];
-
-    protected EntityInterface $entity;
 
     /**
      * 将数据配分到属性上
@@ -25,31 +25,32 @@ class Hydrate
     public static function reassign(EntityInterface $entity): void
     {
         $instance = new static();
-        $instance->setEntity($entity);
-        $instance->assignEntity();
+        $instance->assignEntity($entity);
     }
 
-    public function assignEntity(): void
+    public function assignEntity(EntityInterface $entity): void
     {
-        $reflectProperties = $this->getReflectionProperties();
+        $strategy = $this->getNamingStrategy($entity, 'source');
+        $reflectProperties = $this->getReflectionProperties($entity);
         foreach ($reflectProperties as $name => $property) {
-            $source = $this->getSourceName($property);
-            $default = $property->isInitialized($this->entity)
-                ? $property->getValue($this->entity)
+            $key = $this->getSourceKeyName($property, $strategy);
+            $default = $property->isInitialized($entity)
+                ? $property->getValue($entity)
                 : null;
-            $value = $this->entity->getValueFromOriginal($source, $default);
+            $value = $entity->getOriginalValue($key, $default);
             // 被定义的数据转化
-            if ($entity = $this->getAttributeReader()->getArrayEntityClass($property)) {
+            $arrayEntity = $this->getAttributeReader()->getArrayEntityInstance($property);
+            if ($arrayEntity) {
                 $entities = [];
                 foreach ((array)$value as $item) {
-                    $entities[] = $entity->newInstance($item);
+                    $entities[] = $arrayEntity->newInstance($item);
                 }
                 $value = $entities;
             } else {
-                $value = $this->entity->transform2Entity($name, $value, $property->getType());
+                $value = $entity->transform2Entity($name, $value, $property->getType());
             }
 
-            $property->setValue($this->entity, $value);
+            $property->setValue($entity, $value);
         }
     }
 
@@ -59,32 +60,21 @@ class Hydrate
     public static function extract(EntityInterface $entity): void
     {
         $instance = new static();
-        $instance->setEntity($entity);
-        $instance->toArray();
+        $instance->toArray($entity);
     }
 
-    public function toArray(): void
+    public function toArray(EntityInterface $entity): void
     {
         $result = [];
-        $reflectProperties = $this->getReflectionProperties();
+        $strategy = $this->getNamingStrategy($entity, 'target');
+        $reflectProperties = $this->getReflectionProperties($entity);
         foreach ($reflectProperties as $name => $property) {
-            $target = $this->getTargetName($property);
-            $value = $property->getValue($this->entity);
-            $value = $this->entity->transform2Array($name, $value);
-            $result[$target] = $value;
+            $key = $this->getTargetKeyName($property, $strategy);
+            $value = $property->getValue($entity);
+            $value = $entity->transform2Array($name, $value);
+            $result[$key] = $value;
         }
-        $this->entity->setArray($result);
-    }
-
-    /**
-     * @param EntityInterface $entity
-     * @return $this
-     */
-    public function setEntity(EntityInterface $entity): static
-    {
-        $this->entity = $entity;
-
-        return $this;
+        $entity->setArray($result);
     }
 
     public function getAttributeReader(): AttributeReader
@@ -96,22 +86,42 @@ class Hydrate
         return static::$attributeReader;
     }
 
-    public function getSourceName(ReflectionProperty $property): string
+    /**
+     * @param ReflectionProperty $property
+     * @param string $strategy
+     * @return string
+     */
+    public function getSourceKeyName(ReflectionProperty $property, string $strategy): string
     {
         $source = $this->getAttributeReader()->getColumnSourceName($property);
         if (!$source) {
-            $source = $this->getEntitySourceKeyName($property->getName());
+            $source = $this->getKeyNameFromStrategy($property->getName(), $strategy);
         }
         return $source;
     }
 
-    public function getTargetName(ReflectionProperty $property): string
+    /**
+     * @param ReflectionProperty $property
+     * @param $strategy
+     * @return string
+     */
+    public function getTargetKeyName(ReflectionProperty $property, $strategy): string
     {
         $source = $this->getAttributeReader()->getColumnTargetName($property);
         if (!$source) {
-            $source = $this->getEntityTargetKeyName($property->getName());
+            $source = $this->getKeyNameFromStrategy($property->getName(), $strategy);
         }
         return $source;
+    }
+
+    protected function getReflectionClass(EntityInterface $entity): ReflectionClass
+    {
+        $className = $entity::class;
+        if (isset(static::$reflectionClasses[$className])) {
+            return static::$reflectionClasses[$className];
+        }
+
+        return static::$reflectionClasses[$className] = new ReflectionClass($entity);
     }
 
     /**
@@ -119,44 +129,47 @@ class Hydrate
      *
      * @return ReflectionProperty[]
      */
-    protected function getReflectionProperties(): array
+    protected function getReflectionProperties(EntityInterface $entity): array
     {
-        $class = $this->entity::class;
-        if (isset(static::$reflectionProperties[$class])) {
-            return static::$reflectionProperties[$class];
+        $className = $entity::class;
+        if (isset(static::$reflectionProperties[$className])) {
+            return static::$reflectionProperties[$className];
         }
         $properties = [];
-        $reflectProperties = (new ReflectionClass($this->entity))->getProperties(ReflectionProperty::IS_PUBLIC);
+        $reflectProperties = $this->getReflectionClass($entity)->getProperties(ReflectionProperty::IS_PUBLIC);
         foreach ($reflectProperties as $property) {
             $property->setAccessible(true);
             $properties[$property->getName()] = $property;
         }
 
-        return static::$reflectionProperties[$class] = $properties;
+        return static::$reflectionProperties[$className] = $properties;
+    }
+
+    /**
+     * @param EntityInterface $entity
+     * @param $type
+     * @return string
+     */
+    protected function getNamingStrategy(EntityInterface $entity, $type): string
+    {
+        $strategy = $this->getAttributeReader()->getNamingStrategy(
+            $this->getReflectionClass($entity)
+        );
+        [$source, $target] = explode('_', $strategy);
+        return $type == 'source' ? $source : $target;
     }
 
     /**
      * @param string $name
+     * @param $strategy
      * @return string
      */
-    protected function getEntitySourceKeyName(string $name): string
+    protected function getKeyNameFromStrategy(string $name, $strategy): string
     {
-        return match ($this->entity->getSourceKeyFormat()) {
+        return match ($strategy) {
             'snake' => $this->toSnakeName($name),
-            'camel' => lcfirst($this->toStudlyName($name)),
             'studly' => $this->toStudlyName($name),
-            default => $name
-        };
-    }
-
-    /**
-     * @param string $name
-     * @return string
-     */
-    protected function getEntityTargetKeyName(string $name): string
-    {
-        return match ($this->entity->getTargetKeyFormat()) {
-            'snake' => $this->toSnakeName($name),
+            'camel' => lcfirst($this->toStudlyName($name)),
             default => $name
         };
     }
